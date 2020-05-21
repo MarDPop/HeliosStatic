@@ -1,0 +1,316 @@
+
+<!-- saved from url=(0059)https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"> 
+<title>Earth Rotation and Equatorial Coordinates</title>
+</head>
+<body>
+<h1>Earth Rotation and Equatorial Coordinates</h1>
+
+<ul>
+	<li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#intro">Introduction</a>
+	</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#prec">Precession</a>
+	</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#nut">Nutation</a>
+	</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#cpo">Celestial Pole Offset</a>
+	</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#polar_motion">Polar Motion</a>
+	</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#obs_coord">Observing Station Coordinates</a>
+	<ul>
+		<li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#geocentric">Geocentric</a>
+		</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#geodetic">Geodetic</a>
+		</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#astron">Astronomical or Geographic</a>
+	</li></ul>
+	</li><li><a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref">References</a>
+</li></ul>
+
+<h2><a name="intro">Introduction</a></h2>
+
+By the standards of modern astrometry, the earth is quite a wobbly
+platform from which to observe the sky.  The earth's rotation rate is not
+uniform, its axis of rotation is not fixed in space, and even its shape
+and relative positions of its surface locations are not fixed.  For the
+purposes of pointing a telescope to one-arcsecond accuracy, we need not
+worry about shape and surface feature changes, but changes in the
+orientation of the earth's rotation axis are very important.
+
+<p>In a sense, equatorial sky coordinates are a compromise between an
+earth-based system and one fixed with respect to distant stars.  Right
+ascension and declination are quite analogous to longitude and latitude on
+the earth's surface.  They share the same polar axis and equator, but the
+sky coordinate grid does not rotate with the earth's daily spin.  However,
+apparent right ascension and declination are not fixed with respect to the
+stars because their coordinate frame follows the motion the earth's pole
+and equator.  To be able to list star positions in catalogs, we have
+agreed to use the position of the earth's pole and equator at specified
+times, essentially snapshots of the RA and Dec coordinates at those times.
+January 1, 1950 and 2000 are the most common coordinate epochs.
+
+</p><p>The zero point of right ascension is not assigned to a particular
+celestial object in the same way that zero longitude is defined to be at
+Greenwich, England.  Zero right ascension is the point where the sun
+appears to cross the celestial equator on its south to north journey
+through the sky in the spring.  In three dimensions, the vernal equinox is
+the direction of the line where the plane of the earth's equator
+intersects the plane of the earth's orbit.  Since the earth's orientation
+is constantly changing with respect to the stars, so does the position of
+the vernal equinox.
+
+</p><p>In practice, celestial coordinates are tied to observed objects because
+the location of the vernal equinox is hard to measure directly.  The B1950
+coodinate grid location is defined by the publish positions of stars in
+the fourth Fundamental-Katalog, FK4, and the J2000 system is based on FK5.
+These catalogs list mostly nearby stars so any definition of coordinates
+tied to these catalogs is subject to errors due to motions of the stars on
+the sky.  The FK4 equinox is now known to drift with respect to the FK5
+equinox by about 0.085 arcseconds per century, quite a bit by VLBI
+standards.
+
+</p><p>Currently, the most stable definition of J2000 coordinates is one
+based on about 400 extragalactic objects in
+the <a href="http://rorf.usno.navy.mil/">Radio Optical Reference
+Frame</a>.  This is heavily biased toward VLBI radio sources, but it
+will soon be tied to many more optical objects by the HIPPARCOS
+satellite.  The RORF is stable to at least 0.020 arcseconds per
+century, and this is improving with better observations and a longer
+time base.  The positional accuracy of the ensemble of 400 objects is
+about 0.0005 arcseconds.
+
+</p><p>For partly historical and partly practical reasons, the time variablity
+of the direction of the earth's rotation axis and an observatory's
+relation to it are divided into four components: precession, nutation,
+celestial pole offset, and polar motion.  By definition, precession and
+nutation are mathematically defined through the adoption of the best
+available equations.  Celestial pole offset and polar motion
+are observed offsets from the mathematical formulae and are not
+predictable over long periods of time.  All four components are described
+in more detail below.
+
+</p><h2><a name="prec">Precession</a></h2>
+
+Neither the plane of the earth's orbit, the ecliptic, nor the plane of the
+earth's equator are fixed with respect to distant objects <a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref1">[ref 1]</a>.  The dominant motion is the precession of the
+earth's polar axis around the ecliptic pole, mainly due torques on the
+earth cause by the moon and sun.  The earth's axis sweeps out a cone of
+23.5 degrees half angle in 26,000 years.
+
+<p>The ecliptic pole moves more slowly.  If we imagine the motion of the
+two poles with respect to very distant objects, the earth's pole is moving
+about 20 arcseconds per year, and the ecliptic pole is moving about 0.5
+arcseconds per year.  The combined motion and its effect on the position
+of the vernal equinox are called general precession.  The predictable
+short term deviations of the earth's axis from its long term precession
+are called nutation as explained in the next section.
+
+</p><p>Equations, accurate to one arcsecond, for computing precession
+corrections to right ascension and declination for a given date within
+about 20 years of the year 2000 are
+
+</p><pre>	RA = RA(2000) + (3.075 + 1.336 * sin(RA) * tan(Dec)) * y
+	Dec = Dec(2000) + 20.04 * cos(RA) * y
+</pre>
+
+where <tt>y</tt> is the time from January 1, 2000 in fractional years, and
+the offsets in RA and Dec are in seconds of time and arcseconds,
+respectively.  Very accurate telescope pointing calculations should use
+the exact equations given on pages 104 and 105 of <a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref1">ref
+[1]</a>.
+
+<h2><a name="nut">Nutation</a></h2>
+
+Predictable motions of the earth's rotation axis on time scales less than
+300 years are combined under nutation.  This can be thought of as a first
+order correction to precession.  The currently standard nutation theory is
+composed of 106 non-harmonically-related sine and cosine components,
+mainly due to second-order torque effects from the sun and moon, plus 85
+planetary correction terms.  The four dominant periods of nutation are
+18.6 years (precession period of the lunar orbit), 182.6 days (half a
+year), 13.7 days (half a month), and 9.3 years (rotation period of the
+moon's perigee).
+
+<p>Normally, the corrections for precession and nutation in right ascension and
+declination will be handled by the telescope control computer.  But, if
+you are stuck in the wilderness with a hand held calculator, or you want to
+check a position, the following approximation for nutation are good to
+about an arcsecond <a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref2">[ref 2]</a>.
+
+</p><pre>	delta RA = (0.9175 + 0.3978 * sin(RA) * tan(Dec)) * dL
+						 - cos(RA) * tan(Dec) * dE
+	delta Dec = 0.3978 * cos(RA) * dL + sin(RA) * dE
+</pre>
+
+where delta RA and delta Dec are added to mean coordinates to get apparent
+coordinates, and the nutations in longitude, dL, and obliquity of the
+ecliptic, dE, may be found in the Astronomical Almanac, pages B24-B31, or
+computed from the two largest terms in the general theory with
+
+<pre>	dL = -17.3 * sin(125.0 - 0.05295 * d)
+					- 1.4 * sin(200.0 + 1.97129 * d)
+	dE = 9.4 * cos(125.0 - 0.05295 * d)
+					+ 0.7 * cos(200.0 + 1.97129 * d)
+</pre>
+
+where d = Julian Date - 2451545.0, the sine and cosine arguments are in
+degrees, and dL and dE are in arcseconds.
+
+<h2><a name="cpo">Celestial Pole Offset</a></h2>
+
+The celestial pole offset is the unpredictable part of nutation.  These
+offsets are published in <a href="ftp://maia.usno.navy.mil/ser7/ser7.dat">IERS Bulletin A</a> as
+offsets in dL and dE.  For telescope pointing they are not important since
+they are on the order of 0.03 arcseconds.
+
+<h2><a name="polar_motion">Polar Motion</a></h2>
+
+Because of internal motions and shape deformations of the earth, an axis
+defined by the locations of a set of observatories on the surface of the
+earth is not fixed with respect to the rotation axis which defines the
+celestial pole.  The movement of one axis with respect to the other is
+called polar motion.  For a particular observatory, it has the effect of
+changing the observatory's effective latitude as used in the
+transformation from terrestrial to celestial coordinates.  The
+International Earth Rotation Service definition of the terrestrial
+reference frame axis is called the <a href="ftp://maia.usno.navy.mil/ser7/iersexp.sup">IERS Reference Pole
+(IRP)</a> as defined by it's observatory ensemble.
+
+<p>The dominant component of polar motion, called Chandler wobble, is a
+roughly circular motion of the IRP around the celestial pole with an
+amplitude of about 0.7 arcseconds and a period of roughly 14 months.
+Shorter and longer time scale irregularities, due to internal motions of
+the earth, are not predictable and must be monitored by observation.  The
+sum of Chandler wobble and irregular components of polar motion are
+published weekly in <a href="ftp://maia.usno.navy.mil/ser7/ser7.dat">IERS Bulletin A</a> along
+with predictions for a number of months into the future.
+
+</p><h2><a name="obs_coord">Observing Station Coordinates</a></h2>
+
+There is quite a variety of local and globle coordinate systems that may
+be used to describe locations on the surface of the earth.  The three of
+most importance in astronomy, geocentric, geodetic, and astronomical, are
+briefly described here.  See Chapter 4 of the Explanatory Supplement to
+the Astronomical Almanac <a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref3">[ref 3]</a> for a more complete
+discussion of terrestrial coordinates.
+
+<h3><a name="geocentric">Geocentric</a></h3>
+
+Geocentric coordinates are most useful for VLBI and pulsar timing where
+the observer's three-dimensional location in space is important.  The
+reference planes are the equator, the Greenwich Meridian, and the plane
+through the earth's axis and perpendicular to the Greenwich Meridian, call
+it the east-west plane.  A telescope's rectangular cordinate components
+(x,y,z) are
+
+<pre>	x = distance from the east-west plane, Greewich being positive x
+	y = eastward distance from the Greenwich Merdian
+	z = northward distance from the equator
+</pre>
+
+For example, the coordinates for the 140-ft telescope from VLBI are
+
+<pre>	x =   882880.0208 meters
+	y = -4924482.4385 meters
+	z =  3944130.6438 meters
+</pre>
+
+Geocentric latitude and longitude are not commonly used, but they are
+defined by
+
+<pre>	latitude  = arctan( z / sqrt( x^2 + y^2 ) )
+	longitude = arctan( y / x )
+</pre>
+
+<h3><a name="geodetic">Geodetic</a></h3>
+
+The closest simple approximation to the shape of the surface of the earth
+is an ellipse rotated around the earth's axis, an ellipsoid.  The
+difference between the long and short axes of this ellipse is about 0.3%.
+The value of flattening <a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref4">[ref 4]</a>, adopted by the IERS
+in 1989 is <a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref5">[ref 5]</a>
+
+<pre>	f = ( a - b ) / a = 1.0 / 298.257
+</pre>
+
+where <tt>a</tt> is the equatorial axis, and <tt>b</tt> is the polar axis
+of the ellipsoid.
+
+<p>Geodetic coordinates are a measure of the direction of the line
+perpendicular to the ideal ellipsoid at the observer's location on the
+earth.  Geodetic longitude is the same as geocentric longitude because they
+share the same reference meridian and axis.  Geodetic and geocentric
+latitude can differ by as much as 10 arcminutes at mid latitudes.  The
+ellipsoid is mathematical concept so you cannot measure from it directly,
+but it differs from mean sea level, also called the geoid, by less than
+100 meters and more typically by less than 20 or 30 meters <a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref7">[ref 7]</a>.
+
+</p><p>Observatory longitude and latitude given in Section J of the
+Astronomical Almanac can be considered geodetic to the accuracy of the
+significant figures listed.  Observatory elevation are listed above mean
+sea level.  Until 1984 the Almanac gave the height displacement between
+the reference ellipsoid and mean sea level for a number observatories.
+This has been discontinued, and the definition of the reference ellipsoid
+has been refined in the meantime.
+
+</p><p>If geocentric coordinates for an observatory are not available directly
+they may be derived from geodetic coordinates using the equations given in
+<a href="https://www.cv.nrao.edu/~rfisher/Ephemerides/earth_rot.html#ref6">ref [6]</a>.
+
+</p><h3><a name="astron">Astronomical or Geographic</a></h3>
+
+The observatory coordinates that can be measured with only local information
+are astronomical or geographic longitude and latitude.  They are
+defined by the local gravity vector and the direction of the celestial
+pole.  Since the gravity vector is influenced by the local distribution of
+mass and density near the observatory, the difference between astronomical
+and geodetic coordinates can be as much as an arcminute.
+
+<p>For the purpose of pointing a telescope, astronomical coordinates are
+often sufficient.  The conversion from altitude and azimuth to
+celestial coordinates can be made perfectly accurately using astronomical
+longitude and latitude and the sidereal time consistent with this
+longitude.
+
+</p><p>However, pointing corrections to most telescopes are on the order of
+minutes of arc and are determined from observations of celestial objects.
+Hence, there is no particular advantage to using astronomical coordinates.
+The local vertical and any known corrections are good starting points for
+determining telescope pointing.  Once an altitude/azimuth coordinate
+system is defined on the basis of celestial measurements, it can be
+defined to be consistent with coordinates as defined in three dimensions
+by VLBI or some other technique.
+
+</p><h2><a name="ref">References</a></h2>
+
+<p><a name="ref1">[1] Hohenkerk, C.Y., Yallop, B.D., Smith, C.A.,
+Sinclair, A.T., 1992, "Celestial Reference Systems", Chapter 3, p. 96,
+<em>Explanatory Supplement to the Astronomical Almanac</em>, Seidelmann,
+P.K., Ed., U. S. Naval Observatory, University Science Books, Mill Valley,
+CA.</a>
+
+</p><p><a name="ref2">[2] ibid. p. 120
+
+</a></p><p><a name="ref3">[3] Archinal, B.A., 1992, "Terrestrial Coordinates and
+the Rotation of the Earth", Chapter 4, p. 199, <em>Explanatory Supplement
+to the Astronomical Almanac</em>, Seidelmann, P.K., Ed., U. S. Naval
+Observatory, University Science Books, Mill Valley, CA.</a>
+
+</p><p><a name="ref4">[4] ibid. p. 203</a>
+
+</p><p><a name="ref5">[5] ibid. p. 220</a>
+
+</p><p><a name="ref6">[6] ibid. p. 206</a>
+
+</p><p><a name="ref7">[7] Seidelmann, P.K., Wilkins, G.A., 1992, "Introduction
+to Positional Astronomy", Chapter 16, p. 199, <em>Explanatory Supplement
+to the Astronomical Almanac</em>, Seidelmann, P.K., Ed., U. S. Naval
+Observatory, University Science Books, Mill Valley, CA.</a>
+
+</p><p>Last updated August 2, 2010.
+</p><p>
+<a href="mailto:%20rfisher@nrao.edu">rfisher@nrao.edu</a>
+</p><p>
+<a href="http://www.cv.nrao.edu/~rfisher">Rick Fisher's Home Page</a>
+<script src="./Earth Rotation and Equatorial Coordinates_files/urchin.js.download" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-4638010-2";
+urchinTracker();
+</script>
+
+</p></body></html>
