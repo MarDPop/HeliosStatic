@@ -109,11 +109,13 @@ THREE.MyControls = function ( object , domElement ) {
 		
 		let angle = axis.length();
 		
-		axis.divideScalar(angle);
+		axis.divideScalar( angle );
 		
 		_this.direction = _this.direction0.clone();
 
 		_this.direction.applyAxisAngle( axis, -angle );
+		
+		console.log(angle);
 		
 		//_this.object.up.applyAxisAngle( axis, -angle );
 		

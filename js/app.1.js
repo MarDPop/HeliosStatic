@@ -106,30 +106,27 @@ var db;
 	*/
 	scene.add(light);
 	
-	$.getJSON("",function(data) {
+	$.getJSON("/data/db.json",function(data) {
 		db = data;
 
 		var earth = createEarth();
 		earth.rotateX(Math.PI/2); 
 		earth.position.set(CONSTANTS["AU"]*1000,0,0);
-		//earth.receiveShadow =true;
-		scene.add(earth)
+		scene.add(earth);
 		
 		var moon = createSphere(1737400, segments,'../media/images/2k_moon.jpg',0.8);
 		moon.position.set(CONSTANTS["AU"]*1000,0,1e7);
 		moon.rotateX(Math.PI/2);
-		//moon.castShadow = true;
-		scene.add(moon)
+		scene.add(moon);
 		
 		var sun = createSun();
 		sun.position.set(0,0,0);
-		//moon.castShadow = false;
-		scene.add(sun)
+		scene.add(sun);
 
 		var clouds = createClouds(radius, segments);
 		clouds.position.set(149597870700,0,0);
 		clouds.rotateX(Math.PI/2);
-		scene.add(clouds)
+		scene.add(clouds);
 
 		var stars = createStars(40*149597870700, 32);
 		scene.add(stars);
@@ -150,9 +147,19 @@ var db;
 			},1000/25);
 			
 		}
+		
 		setTimeout(function(){
 			$("#modal-container").fadeOut();
 		},1000);
+		
+	}).fail(function() {
+		
+		setTimeout(function(){
+			$("#target").text("Database failed to load.");
+		},1000);
+		
+	}).always(function() {
+		
 	});
 	
 	
