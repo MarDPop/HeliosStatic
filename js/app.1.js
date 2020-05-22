@@ -1,4 +1,32 @@
+function dateToJulianNumber(d) {
+    // convert a Gregorian Date to a Julian number. 
+    //    S.Boisseau / BubblingApp.com / 2014
+    var x = Math.floor((14 - d.getMonth())/12);
+    var y = d.getFullYear() + 4800 - x;
+    var z = d.getMonth() - 3 + 12 * x;
+	var s = (d.getUTCHours()*3600 + d.getUTCMinutes()*60 + d.getUTCSeconds())/86400;
 
+    var n = d.getDate() + Math.floor(((153 * z) + 2)/5) + (365 * y) + Math.floor(y/4) + Math.floor(y/400) - Math.floor(y/100) - 32045 + s;
+
+    return n;
+}   
+
+function julianIntToDate(n) {
+    // convert a Julian number to a Gregorian Date.
+    //    S.Boisseau / BubblingApp.com / 2014
+    var a = n + 32044;
+    var b = Math.floor(((4*a) + 3)/146097);
+    var c = a - Math.floor((146097*b)/4);
+    var d = Math.floor(((4*c) + 3)/1461);
+    var e = c - Math.floor((1461 * d)/4);
+    var f = Math.floor(((5*e) + 2)/153);
+
+    var D = e + 1 - Math.floor(((153*f) + 2)/5);
+    var M = f + 3 - 12 - Math.round(f/10);
+    var Y = (100*b) + d - 4800 + Math.floor(f/10);
+
+    return new Date(Y,M,D);
+}
 
 function oe2state( oe , mu ) {
 	tmp = 1 - oe[1]*oe[1];
@@ -28,6 +56,27 @@ function oe2state( oe , mu ) {
 	return state;
 }
 
+function oe2pos( oe , mu ) {
+	ct = cos(oe[5]);
+	radius = oe[0]*(1 - oe[1]*oe[1])/(1+oe[1]*ct);
+	x = radius*ct;
+	y = radius*sin(oe[5]);
+	cw = cos(oe[4]);
+	sw = sin(oe[4]);
+	co = cos(oe[3]);
+	so = sin(oe[3]);
+	ct = cos(oe[2]);
+	st = sin(oe[2]);
+	Rxx = cw*co-sw*ct*so;
+	Rxy = sw*co+cw*ct*so;
+	Ryx = cw*so+sw*ct*co;
+	Ryy = cw*ct*co-sw*so;
+	Rzx = sw*st;
+	Rzy = cw*st;
+	
+	return new Vector3(Rxx*x+Rxy*y,Ryx*x+Ryy*y,Rzx*x+Rzy*y);
+}
+
 function state2oe( r , v , mu) {
 	h = r.cross(v);
 	n = (new Vector3(0,0,1)).cross(h);
@@ -55,6 +104,8 @@ function state2oe( r , v , mu) {
 }
 
 var db;
+
+var planetList = {};
 
 (function () {
 
@@ -106,25 +157,28 @@ var db;
 	*/
 	scene.add(light);
 	
+	var clouds;
+	var dt;
+	
 	$.getJSON("/data/db.json",function(data) {
 		db = data;
-
-		var earth = createEarth();
-		earth.rotateX(Math.PI/2); 
-		earth.position.set(CONSTANTS["AU"]*1000,0,0);
-		scene.add(earth);
 		
-		var moon = createSphere(1737400, segments,'../media/images/2k_moon.jpg',0.8);
-		moon.position.set(CONSTANTS["AU"]*1000,0,1e7);
-		moon.rotateX(Math.PI/2);
-		scene.add(moon);
-		
-		var sun = createSun();
-		sun.position.set(0,0,0);
-		scene.add(sun);
+		for(planet : db["Planets"]) {
+			var p;
+			if(planet == "Earth") {
+				p = createEarth();
+			} else if (planet == "Sun") {
+				p = createSun();
+			} else {
+				p = createSphere(planet["Radius"],segments,planet["Image"]);
+			}
+			p.position.set(CONSTANTS["AU"]*1000,0,1e7);
+			p.rotateX(Math.PI/2);
+			planetGeometry[planet] = p;
+			scene.add(p);
+		}
 
-		var clouds = createClouds(radius, segments);
-		clouds.position.set(149597870700,0,0);
+		clouds = createClouds(radius, segments);
 		clouds.rotateX(Math.PI/2);
 		scene.add(clouds);
 
@@ -148,8 +202,12 @@ var db;
 			
 		}
 		
+		updatePositions();
+		
 		setTimeout(function(){
-			$("#modal-container").fadeOut();
+			$("#modal-container").fadeOut(1000, function() {
+				$("#loader-screen").hide();
+			});
 		},1000);
 		
 	}).fail(function() {
@@ -161,6 +219,32 @@ var db;
 	}).always(function() {
 		
 	});
+	
+	function updatePositions() {
+		let t = $("#time input").val();
+		
+		let JDN = dateToJulianNumber(new Date());
+		
+		for( planet in planetList){
+			
+			let tab = db["Planets"][planet]["JD (TDB)"];
+			var i = 0;
+			while(tab[i] < JDN) {
+				i++;
+			}
+			
+			let deltaT = ;
+			
+			db["Planets"][planet]["Orb Elements"]
+			state = oe2pos(){
+				
+			}
+		}
+		
+		setTimeout(function() {
+			
+		},500);
+	}
 	
 	
 

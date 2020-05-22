@@ -1,5 +1,9 @@
 function load_page(page_name) {
 	
+	$.get( "content/"+page_name+".html", function( data ) {
+		$("#target").html(data);
+	}, "html" );
+	
 }
 
 $("#modal-container").click(function() {
@@ -8,10 +12,11 @@ $("#modal-container").click(function() {
 
 function changeTime() {
 	var d = new Date();
-	$("#time").text(d.toUTCString());
+	$("#time > span").val(d.toUTCString());
+	$("#time > input").val(d.
 	setTimeout(function() {
 		changeTime();
-	},1000);
+	},100);
 }
 
 changeTime();

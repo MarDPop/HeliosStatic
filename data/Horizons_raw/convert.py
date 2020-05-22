@@ -9,7 +9,7 @@ for fn in glob.glob("*.txt"):
     f = open(fn, "r")
     data = f.read();
                     
-    body_name = re.search(r'Target body name: ([\w ]+){?',data).group(1).strip()
+    body_name = re.search(r'Target body name: ([\w \-]+)?',data).group(1).strip()
 
     ref_name = re.search(r'Center body name: ([\w ]+){?',data).group(1).strip()
     ref_MU = float(re.search(r'Keplerian GM    : ([\d.E\- ]+)',data).group(1))
@@ -17,9 +17,28 @@ for fn in glob.glob("*.txt"):
     coordinate_system = re.search(r'Coordinate systm: ([\w /]+){?',data).group(1)
     matches = re.search(r'GM= ([\d.E\- ]+)',data)
     if matches == None:
-        MU = 0.
+        MU = 0.0
     else:
-        MU = matches.group(1)
+        MU = float(matches.group(1))
+
+    matches = re.search(r'RAD= ([\d.E\- ]+)',data)
+    if matches == None:
+        Radius = 0.0
+    else:
+        Radius = float(matches.group(1))
+
+    matches = re.search(r'ALBEDO= ([\d.E\- ]+)',data)
+    if matches == None:
+        Albedo = 0.5
+    else:
+        Albedo = float(matches.group(1))
+
+    matches = re.search(r'ROTPER= ([\d.E\- ]+)',data)
+    if matches == None:
+        RotationPeriod = 0.0 #hours
+    else:
+        RotationPeriod = float(matches.group(1))
+        
 
     OEs = re.search(r'SOE\n(.*)\$\$',data,re.DOTALL|re.M).group(1)
 
@@ -35,31 +54,45 @@ for fn in glob.glob("*.txt"):
         oe[2] = math.radians(float(row[4])) # inclination
         oe[3] = math.radians(float(row[5])) # longitude of ascending node
         oe[4] = math.radians(float(row[6])) # argument of periapse
-        oe[5] = math.radians(float(row[9])) # true anomaly
-        oe[0] = float(row[10]) # semi major axis in AU
+        oe[5] = math.radians(float(row[10])) # true anomaly
+        oe[0] = float(row[11]) # semi major axis in AU
         oe[6] = float(ref_MU) # mu for coord
         oe[7] = math.radians(float(row[8])) # mean anomaly
         data.append(oe[:])
 
     dt = JD[1]-JD[0]
     for i in range(2,len(JD)):
-        if abs(JD[i]-JD[i-1])/dt > 1e-6:
+        if abs((JD[i]-JD[i-1])/dt) > 1e-3:
             dt = 0
             break
-    
-    
-    db["Planets"][body_name] = {}                
-    db["Planets"][body_name]["Reference Center"] = ref_name
-    db["Planets"][body_name]["Reference MU"] = ref_MU
-    db["Planets"][body_name]["Reference Frame"] = ref_frame
-    db["Planets"][body_name]["Reference Coordinate System"] = coordinate_system
-    db["Planets"][body_name]["MU"] = MU
-    db["Planets"][body_name]["Albedo"] = 0.
-    db["Planets"][body_name]["Description"] = ""
-    db["Planets"][body_name]["Orbital Elements Table"] = data
-    db["Planets"][body_name]["Julian Day (TDB)"] = JD
-    db["Planets"][body_name]["Time step"] = dt
-    db["Planets"][body_name]["Orbiting Bodies"] = []
+        
+    Img = "";
 
-with open('solarsystem.json', 'w') as outfile:
+    if body_name == "Moon" :
+        Img = '../media/images/2k_moon.jpg';
+        
+    if body_name == "Earth" :
+        Img = '../media/images/8k_earth_daymap.jpg'.jpg';
+
+    if body_name == "Sun" :
+        Img = '../media/images/2k_sun.jpg'.jpg';
+
+    db["Planets"][body_name] = {}                
+    db["Planets"][body_name]["Ref. Center"] = ref_name
+    db["Planets"][body_name]["Ref. MU"] = ref_MU
+    db["Planets"][body_name]["Ref. Frame"] = ref_frame
+    db["Planets"][body_name]["Ref. Coord Sys"] = coordinate_system
+    db["Planets"][body_name]["Grav. Constants"] = {}
+    db["Planets"][body_name]["Grav. Constants"]["MU"] = MU
+    db["Planets"][body_name]["Radius"] = Radius
+    db["Planets"][body_name]["Albedo"] = Albedo
+    db["Planets"][body_name]["Rot. Period"] = RotationPeriod
+    db["Planets"][body_name]["Img"] = ""
+    db["Planets"][body_name]["Desc"] = ""
+    db["Planets"][body_name]["Orb Elements"] = data
+    db["Planets"][body_name]["JD (TDB)"] = JD
+    db["Planets"][body_name]["DT"] = dt
+    db["Planets"][body_name]["Orb Bodies"] = []
+
+with open('db.json', 'w') as outfile:
     json.dump(db, outfile)
