@@ -17,21 +17,16 @@ a {
 }
 
 a:hover {
-	color: #3af;
+	color: #fff !important;/*#aef; */
 }
 
 a:visited {
-	color: #cef;
+	color: #cef; 
 }
 
 li {
 	list-style-type:none;
 	display: inline-block;
-}
-
-h3 {
-	color: #fff;
-	display:inline;
 }
 
 header {
@@ -40,24 +35,49 @@ header {
 	top:0px;
 	left:0px;
 	width:100%;
+	line-height: 100px;
+}
+
+.shadow {
+	-o-box-shadow:      1px 1px 3px #000;
+	-icab-box-shadow:   1px 1px 3px #000;
+	-khtml-box-shadow:  12px 1px 3px #000;
+	-moz-box-shadow:    1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow:         1px 1px 3px #000;
+}
+
+.shadowed {
+    -webkit-filter: drop-shadow(1px 1px 3px #000);
+    filter: drop-shadow(1px 1px 2px #000);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=1, OffY=1, Color='#000')";
+    filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=1, OffY=1, Color='#000')";
 }
 
 #menu {
+	position:relative;
+	margin-left: 200px;
+	margin-right: 25px;
 	display:inline-block;
-	margin: 5px;
+	text-shadow: 1px 1px 3px #000;
 }
 
-#menu li {
-	margin: 10px 5px;
+#menu > a {
+	margin: 0px 15px;
 }
 
-#menu li span {
+#menu > a > span {
 	padding : 5px;
 }
 
 #profile {
 	float:right;
-	margin: 10px;
+	margin-right: 25px;
+}
+
+#focus {
+	margin-left: 25px;
+	font-weight: bold;
 }
 
 input {
@@ -79,6 +99,62 @@ div.centerer {
 	text-align:center;
 }
 
+#pane {
+	position:absolute;
+	top: 100px;
+	left: 10px;
+	width: 280px;
+	height: 600px;
+	border: 1px solid #333;
+	background: rgba(0,0,0,0.5);
+	color: #fff;
+}
+
+#pane > .title {
+	background: #333;
+	font-weight: bold;
+	padding: 10px;
+}
+
+#pane .body-list {
+	overflow: auto;
+	height: 400px;
+	margin: 0px;
+	border-bottom:1px solid #333;
+}
+
+#pane .body-list a {
+	display:block;
+	margin: 10px;
+}
+
+#pane a.add-body {
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid #333;
+	display:inline-block;
+}
+
+/* The emerging W3C standard
+   that is currently Firefox-only */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: black grey;
+}
+
+/* Works on Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+*::-webkit-scrollbar-track {
+  background: #000;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 0px;
+  border: 1px solid #333;
+}
+
 #modal-container {
 	position:fixed;
 	top:0px;
@@ -90,10 +166,36 @@ div.centerer {
 }
 
 #modal {
-	margin: -100px auto;
 	border: 2px solid #333;
 	border-radius: 10px;
-	background: #000;
+	background: rgba(0,0,0,0.5);
 	display:inline-block;
+	color: #fff;
 }
 
+#debug {
+	position:fixed;
+	z-index:9999;
+	min-height: 60px;
+	max-height: 100px;
+	min-width: 200px;
+	max-width: 400px;
+	padding: 5px;
+	border-radius: 5px;
+	background: #fff;
+	color: #333;
+	bottom: 5px;
+	right: 5px;
+	font-size: 12px;
+}
+
+#debug h3 {
+	font-size: 18px;
+	line-height: 20px;
+	margin: 0px auto;
+}
+
+img.logo {
+	position:absolute;
+	height: 100px;
+}

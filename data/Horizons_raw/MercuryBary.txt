@@ -25,7 +25,7 @@ Object Data Page
  Revised: July 31, 2013              Mercury                            199 / 1
 
  PHYSICAL DATA (updated 2018-Aug-15):
-  Vol. Mean Radius (km) =  2440+-1        Density (g cm^-3)     = 5.427
+  Vol. Mean Radius (km) =  2440        Density (g cm^-3)     = 5.427
   Mass x10^23 (kg)      =     3.302       Volume (x10^10 km^3)  = 6.085  
   Sidereal rot. period  =    58.6463 d    Sid. rot. rate (rad/s)= 0.00000124001
   Mean solar day        =   175.9421 d    Core radius (km)      = ~1600 

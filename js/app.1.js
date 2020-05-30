@@ -29,75 +29,76 @@ function julianIntToDate(n) {
 }
 
 function oe2state( oe , mu ) {
-	tmp = 1 - oe[1]*oe[1];
-	ct = cos(oe[5]);
-	st = sin(oe[5]);
-	tmp2 = 1+oe[1]*ct;
-	radius = oe[0]*tmp/tmp2;
-	x = radius*ct;
-	y = radius*st;
-	tmp = sqrt( mu*oe[0]*tmp )/radius;
-	v = new THREE.Vector2(tmp*st/tmp2,tmp*(oe[1]+ct)/tmp2);
-	cw = cos(oe[4]);
-	sw = sin(oe[4]);
-	co = cos(oe[3]);
-	so = sin(oe[3]);
-	ct = cos(oe[2]);
-	st = sin(oe[2]);
-	Rxx = cw*co-sw*ct*so;
-	Rxy = sw*co+cw*ct*so;
-	Ryx = cw*so+sw*ct*co;
-	Ryy = cw*ct*co-sw*so;
-	Rzx = sw*st;
-	Rzy = cw*st;
-	
-	state.r = new Vector3(Rxx*x+Rxy*y,Ryx*x+Ryy*y,Rzx*x+Rzy*y);
-	state.v = new Vector3(Rxx*x_dot+Rxy*y_dot,Ryx*x_dot+Ryy*y_dot,Rzx*x_dot+Rzy*y_dot);
+	let tmp = 1 - oe[1]*oe[1];
+	let ct = Math.cos(oe[5]);
+	let st = Math.sin(oe[5]);
+	let tmp2 = 1+oe[1]*ct;
+	let radius = oe[0]*tmp/tmp2;
+	let x = radius*ct;
+	let y = radius*st;
+	tmp = Math.sqrt( mu*oe[0]*tmp )/radius;
+	let v = new THREE.Vector2(tmp*st/tmp2,tmp*(oe[1]+ct)/tmp2);
+	let cw = Math.cos(oe[4]);
+	let sw = Math.sin(oe[4]);
+	let co = Math.cos(oe[3]);
+	let so = Math.sin(oe[3]);
+	ct = Math.cos(oe[2]);
+	st = Math.sin(oe[2]);
+	let Rxx = cw*co-sw*ct*so;
+	let Rxy = sw*co+cw*ct*so;
+	let Ryx = cw*so+sw*ct*co;
+	let Ryy = cw*ct*co-sw*so;
+	let Rzx = sw*st;
+	let Rzy = cw*st;
+	var state = {};
+	state["r"] = new THREE.Vector3(Rxx*x+Rxy*y,Ryx*x+Ryy*y,Rzx*x+Rzy*y);
+	state["v"] = new THREE.Vector3(Rxx*x_dot+Rxy*y_dot,Ryx*x_dot+Ryy*y_dot,Rzx*x_dot+Rzy*y_dot);
 	return state;
 }
 
 function oe2pos( oe , mu ) {
-	ct = cos(oe[5]);
-	radius = oe[0]*(1 - oe[1]*oe[1])/(1+oe[1]*ct);
-	x = radius*ct;
-	y = radius*sin(oe[5]);
-	cw = cos(oe[4]);
-	sw = sin(oe[4]);
-	co = cos(oe[3]);
-	so = sin(oe[3]);
-	ct = cos(oe[2]);
-	st = sin(oe[2]);
-	Rxx = cw*co-sw*ct*so;
-	Rxy = sw*co+cw*ct*so;
-	Ryx = cw*so+sw*ct*co;
-	Ryy = cw*ct*co-sw*so;
-	Rzx = sw*st;
-	Rzy = cw*st;
+	let ct = Math.cos(oe[5]);
+	let radius = oe[0]*(1 - oe[1]*oe[1])/(1+oe[1]*ct);
+	let x = radius*ct;
+	let y = radius*Math.sin(oe[5]);
+	let cw = Math.cos(oe[4]);
+	let sw = Math.sin(oe[4]);
+	let co = Math.cos(oe[3]);
+	let so = Math.sin(oe[3]);
+	ct = Math.cos(oe[2]);
+	let st = Math.sin(oe[2]);
+	let Rxx = cw*co-sw*ct*so;
+	let Rxy = sw*co+cw*ct*so;
+	let Ryx = cw*so+sw*ct*co;
+	let Ryy = cw*ct*co-sw*so;
+	let Rzx = sw*st;
+	let Rzy = cw*st;
 	
-	return new Vector3(Rxx*x+Rxy*y,Ryx*x+Ryy*y,Rzx*x+Rzy*y);
+	return new THREE.Vector3(Rxx*x+Rxy*y,Ryx*x+Ryy*y,Rzx*x+Rzy*y);
 }
 
 function state2oe( r , v , mu) {
-	h = r.cross(v);
-	n = (new Vector3(0,0,1)).cross(h);
-	v2 = v.dot(v);
-	radius = r.lengthSq();
-	rv = r.dot(v);
-	e = r.clone().multiplyScalar(v2/mu - 1/radius)+ v.clone().multiplyScalar(rv/mu);
-	egy = v2/2-mu/radius;
+	var h = r.cross(v);
+	var n = (new Vector3(0,0,1)).cross(h);
+	var v2 = v.dot(v);
+	var radius = r.length();
+	var rv = r.dot(v);
+	var e = r.clone().multiplyScalar(v2/mu - 1/radius)+ v.clone().multiplyScalar(rv/mu);
+	var egy = v2/2-mu/radius;
+	var oe = [];
 	oe[0] = -mu/(2*egy);
 	oe[1] = e.lengthSq();
-	oe[2] = acos(h.z/h.lengthSq());
-	nmag = n.lengthSq();
-	oe[3] = acos(n.x/nmag);
+	oe[2] = Math.acos(h.z/h.length());
+	var nmag = n.length();
+	oe[3] = Math.acos(n.x/nmag);
 	if(n[1] < 0) {
 		oe[3] = 6.28318530717958647692528676 - oe[3];
 	}	
-	oe[4] = acos(n.dot(e)/(nmag*oe[1]));
+	oe[4] = Math.acos(n.dot(e)/(nmag*oe[1]));
 	if(e[2] < 0) {
 		oe[4] = 6.28318530717958647692528676 - oe[4];
 	}
-	oe[5] = acos(e.dot(r)/(oe[1]*radius));
+	oe[5] = Math.acos(e.dot(r)/(oe[1]*radius));
 	if( rv < 0 ) {
 		oe[5] = 6.28318530717958647692528676
 	}
@@ -129,9 +130,7 @@ var planetList = {};
 	THREE.Object3D.DefaultUp = new THREE.Vector3(0,0,1);
 
 	var camera = new THREE.PerspectiveCamera(45, width / height, 1000, 1e20);
-	camera.position.set(149597870700,1e8,0);
 	camera.up.set(0,0,1);
-	camera.lookAt(149597870700,0,0);
 
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(width, height);
@@ -147,7 +146,8 @@ var planetList = {};
 
 	var light = new THREE.PointLight(0xffffff, 1,0,2); //3.75e28 lum 3.82e26 wa
 	light.position.set(0,0,0);
-	light.power = 3.82e26/60;
+	light.power = 3.82e20/60;
+	//light.power = 3.82e26/60;
 	/*
 	light.castShadow = true; 
 	light.shadow.mapSize.width = 2048;  // default
@@ -163,32 +163,48 @@ var planetList = {};
 	$.getJSON("/data/db.json",function(data) {
 		db = data;
 		
-		for(planet : db["Planets"]) {
+		var earth;
+		
+		for(var planet in db["Planets"]) {
 			var p;
 			if(planet == "Earth") {
 				p = createEarth();
+				
+				earth = p;
+				
 			} else if (planet == "Sun") {
 				p = createSun();
 			} else {
-				p = createSphere(planet["Radius"],segments,planet["Image"]);
+				if (db["Planets"][planet]["Img"] == "") {
+					p = createSphere(db["Planets"][planet]["Radius"],segments,"../media/images/2k_ceres_fictional.jpg");
+				} else {
+					p = createSphere(db["Planets"][planet]["Radius"],segments,db["Planets"][planet]["Img"]);
+				}
 			}
-			p.position.set(CONSTANTS["AU"]*1000,0,1e7);
 			p.rotateX(Math.PI/2);
-			planetGeometry[planet] = p;
+			planetList[planet] = p;
 			scene.add(p);
 		}
 
-		clouds = createClouds(radius, segments);
-		clouds.rotateX(Math.PI/2);
-		scene.add(clouds);
+		//clouds = createClouds(radius, segments);
+		//clouds.rotateX(Math.PI/2);
+		//scene.add(clouds);
+		
+		updatePositions();
+		
+		camera.position.set( earth.position.x , earth.position.y + 1e4, earth.position.z );
+		camera.lookAt( earth.position );
 
-		var stars = createStars(40*149597870700, 32);
+		var stars = createStars(45*CONSTANTS["AU"], 32);
+		stars.rotateX(Math.PI/2);
 		scene.add(stars);
 
-		var controls = new THREE.MyControls(camera);
-		controls.setTarget( new THREE.Vector3( 149597870700, 0, 0 ) );
+		var controls = new THREE.MyControls(camera,document.getElementById('webgl'));
+		controls.setPlanet( earth );
 
 		webglEl.appendChild(renderer.domElement);
+		
+		populateBodyList( db );
 
 		render();
 
@@ -201,8 +217,6 @@ var planetList = {};
 			},1000/25);
 			
 		}
-		
-		updatePositions();
 		
 		setTimeout(function(){
 			$("#modal-container").fadeOut(1000, function() {
@@ -225,47 +239,79 @@ var planetList = {};
 		
 		let JDN = dateToJulianNumber(new Date());
 		
-		for( planet in planetList){
+		for(var planet in planetList){
 			
-			let tab = db["Planets"][planet]["JD (TDB)"];
-			var i = 0;
-			while(tab[i] < JDN) {
-				i++;
-			}
-			
-			let deltaT = ;
-			
-			db["Planets"][planet]["Orb Elements"]
-			state = oe2pos(){
+			let DT = db["Planets"][planet]["DT"];
+			if (DT == 0) {
+				var idx = 0;
+				while(days[i] < JDN) {
+					idx++;
+				}
+				idx--;
+				var delta_hi = (JDN-days[idx])/(days[idx+1]-days[idx]);
+				
+			} else {
+				var delta_hi = (JDN- db["Planets"][planet]["JD (TDB)"][0])/DT;
+				var idx = Math.floor(delta_hi);
+				delta_hi -= idx;
 				
 			}
+			var oe = db["Planets"][planet]["Orb Elements"][idx].slice();
+			var delta_lo = 1-delta_hi;
+			for(var i = 0; i < 6; i++) {
+				oe[i] = delta_lo*oe[i] + delta_hi*db["Planets"][planet]["Orb Elements"][idx+1][i];
+			}
+			var posi = oe2pos(oe, db["Planets"][planet]["Ref. MU"]);
+			
+			var refCenter = db["Planets"][planet]["Ref. Center"];
+			
+			var posj = new THREE.Vector3(0,0,0);
+			if(refCenter.localeCompare("Solar System Barycenter") != 0) {
+				var oe = db["Planets"][refCenter]["Orb Elements"][idx].slice();
+				var delta_lo = 1-delta_hi;
+				for(var i = 0; i < 6; i++) {
+					oe[i] = delta_lo*oe[i] + delta_hi*db["Planets"][refCenter]["Orb Elements"][idx+1][i];
+				}
+				posj = oe2pos(oe, db["Planets"][planet]["Ref. MU"]);
+			}
+			
+			planetList[planet].position.set(CONSTANTS["AU"]*(posi.x+posj.x),CONSTANTS["AU"]*(posi.y+posj.y),CONSTANTS["AU"]*(posi.z+posj.z));
+			
+			if(planet == "Sun") {
+				
+				light.position.set(planetList[planet].position.x,planetList[planet].position.y,planetList[planet].position.z);
+				
+			}
+			
 		}
 		
 		setTimeout(function() {
-			
+			updatePositions();
 		},500);
 	}
 	
 	
 
 	// Since most planets won't use bump mapping use this
-	function createSphere(radius, segments,image, reflection) {
+	function createSphere(radius, segments, image, reflection = 0.7) {
 		return new THREE.Mesh(
-			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.SphereBufferGeometry(radius, segments, segments),
 			new THREE.MeshPhongMaterial({ 
 				map: new THREE.TextureLoader().load( image ),	
-				reflectivity: reflection,			
+				reflectivity: reflection,	
+				specular:    0x111111,
+				shininess: 20,
 			})
 		);
 	}
 	
 	function createEarth() {
 		return new THREE.Mesh(
-			new THREE.SphereGeometry(6378000, 64, 64),
+			new THREE.SphereGeometry(6378, 64, 64),
 			new THREE.MeshPhongMaterial({
 				map:         new THREE.TextureLoader().load('../media/images/8k_earth_daymap.jpg'),
 				bumpMap:     new THREE.TextureLoader().load('../media/images/elev_bump_4k.jpg'),
-				bumpScale:   8000,
+				bumpScale:   8,
 				// normalMap: new THREE.TextureLoader().load('../media/images/8k_earth_normal_map.tif'),
 				specularMap: new THREE.TextureLoader().load('../media/images/8k_earth_specular_map.tif'),
 				specular:    0x111111,
@@ -277,7 +323,7 @@ var planetList = {};
 
 	function createClouds() {
 		return new THREE.Mesh(
-			new THREE.SphereGeometry(6390000, 64, 64),			
+			new THREE.SphereGeometry(6390, 64, 64),			
 			new THREE.MeshPhongMaterial({
 				map:         new THREE.TextureLoader().load('../media/images/fair_clouds_4k.png'),
 				transparent: true,
@@ -287,7 +333,7 @@ var planetList = {};
 	
 	function createSun(segments) {
 		return new THREE.Mesh(
-			new THREE.SphereGeometry(696342000, 32, 32),
+			new THREE.SphereGeometry(696342, 32, 32),
 			new THREE.MeshPhongMaterial({
 				map:  new THREE.TextureLoader().load('../media/images/2k_sun.jpg'),
 				lightMap: new THREE.TextureLoader().load('../media/images/2k_sun.jpg'),

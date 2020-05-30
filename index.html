@@ -22,17 +22,21 @@
 	-->
   </head>
   <body>
-    <header>
-	<h3>Helios</h3>
-	<ul id="menu">
-		<a href=#><li><i class="fas fa-globe"></i><span>Bodies</span></li></a>
-		<a href=#><li><i class="fas fa-rocket"></i><span>Vehicle</span></li></a>
-		<a href=#><li><i class="fas fa-cog"></i><span>Settings</span></li></a>
-		<a href=#><li><i class="fas fa-play"></i><span>Run</span></li></a>
-		<a href=#><li><i class="fas fa-undo-alt"></i><span>Reset</span></li></a>
-	</ul>
+	<div id="pane" ><div class="title">Bodies <a href="#close"><i class="fas fa-window-close" style="float:right;"></i></a></div><div class="target"></div></div>
 	
-	<span id="time"><span></span> <input type="hidden" id="time" val="" /></span>
+    <header class="shadowed">
+	<img src="/media/images/logo.png" class="logo" />
+	<div id="menu">
+		<a href="#bodies" class="menu-bodies"><i class="fas fa-globe"></i><span>Bodies</span></a>
+		<a href="#vehicle" class="menu-vehicle"><i class="fas fa-rocket"></i><span>Vehicle</span></a>
+		<a href="#settings" class="menu-settings"><i class="fas fa-cog"></i><span>Settings</span></a>
+		<a href="#run" class="menu-run"><i class="fas fa-play"></i><span>Run</span></a>
+		<a href="#reset" class="menu-reset"><i class="fas fa-undo-alt"></i><span>Reset</span></a>
+	</div>
+	
+	
+	<span id="time"><span></span> <input type="hidden" id="utc-time" val="" /></span>
+	<span id="focus">Focus: <span>Earth</span></span>
 	<a href=#><span id="profile"><i class="fas fa-user"></i></span></a>
 	</header>
 	
@@ -55,6 +59,8 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="debug"><a href='#' style="position:absolute;left:-18px; color:red;" onclick="document.getElementById('debug').style.display='none';document.getElementById('debug').style.opacity=0">X</a><h3>Debug</h3><p>test, Hi Leighton</p></div>
 	
 	<script src="js/page.js"></script>
 	<script src="js/app.1.js?v=3" type="module"></script>

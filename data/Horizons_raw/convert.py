@@ -11,8 +11,8 @@ for fn in glob.glob("*.txt"):
                     
     body_name = re.search(r'Target body name: ([\w \-]+)?',data).group(1).strip()
 
-    ref_name = re.search(r'Center body name: ([\w ]+){?',data).group(1).strip()
-    ref_MU = float(re.search(r'Keplerian GM    : ([\d.E\- ]+)',data).group(1))
+    ref_name = re.search(r'Center body name: ([\w \-]+){?',data).group(1).strip()
+    ref_MU = float(re.search(r'Keplerian GM    : ([\d.E\- ]+)',data).group(1)) # in AU3/d2
     ref_frame = re.search(r'Reference frame : ([\w ]+){?',data).group(1)
     coordinate_system = re.search(r'Coordinate systm: ([\w /]+){?',data).group(1)
     matches = re.search(r'GM= ([\d.E\- ]+)',data)
@@ -21,9 +21,21 @@ for fn in glob.glob("*.txt"):
     else:
         MU = float(matches.group(1))
 
-    matches = re.search(r'RAD= ([\d.E\- ]+)',data)
+    matches = re.search(r'RAD= ([\d.E\- ]+)\s+',data)
     if matches == None:
-        Radius = 0.0
+        matches = re.search(r'mean radius.*km.*=\s+([\d\.]+)[\+\- A-Z]+',data,re.IGNORECASE)
+        if matches == None:
+            matches = re.search(r'equatorial radius.*km.*=\s+([\d\.]+)[\+\- A-Z]+',data,re.IGNORECASE)
+            if matches == None:
+                matches = re.search(r'radius.*km.*=\s(\d+\.?\d+)[\+\- ]+',data,re.IGNORECASE)
+                if matches == None:
+                    Radius = 0.0
+                else:
+                    Radius = float(matches.group(1))
+            else:
+                Radius = float(matches.group(1))
+        else:
+            Radius = float(matches.group(1))
     else:
         Radius = float(matches.group(1))
 
@@ -62,20 +74,26 @@ for fn in glob.glob("*.txt"):
 
     dt = JD[1]-JD[0]
     for i in range(2,len(JD)):
-        if abs((JD[i]-JD[i-1])/dt) > 1e-3:
+        if abs((JD[i]-JD[i-1])-dt) > 1e-4:
             dt = 0
             break
         
     Img = "";
 
     if body_name == "Moon" :
-        Img = '../media/images/2k_moon.jpg';
+        Img = "../media/images/2k_moon.jpg"
         
     if body_name == "Earth" :
-        Img = '../media/images/8k_earth_daymap.jpg'.jpg';
+        Img = "../media/images/8k_earth_daymap.jpg."
 
     if body_name == "Sun" :
-        Img = '../media/images/2k_sun.jpg'.jpg';
+        Img = "../media/images/2k_sun.jpg"
+
+    if body_name == "Jupiter" :
+        Img = "../media/images/2k_jupiter.jpg"
+
+    if body_name == "Mars" :
+        Img = "../media/images/2k_jupiter.jpg"
 
     db["Planets"][body_name] = {}                
     db["Planets"][body_name]["Ref. Center"] = ref_name
@@ -87,12 +105,16 @@ for fn in glob.glob("*.txt"):
     db["Planets"][body_name]["Radius"] = Radius
     db["Planets"][body_name]["Albedo"] = Albedo
     db["Planets"][body_name]["Rot. Period"] = RotationPeriod
-    db["Planets"][body_name]["Img"] = ""
+    db["Planets"][body_name]["Img"] = Img
     db["Planets"][body_name]["Desc"] = ""
     db["Planets"][body_name]["Orb Elements"] = data
     db["Planets"][body_name]["JD (TDB)"] = JD
     db["Planets"][body_name]["DT"] = dt
     db["Planets"][body_name]["Orb Bodies"] = []
+
+for body in db["Planets"]:
+    if (db["Planets"][body]["Ref. Center"] in db["Planets"]):
+        db["Planets"][db["Planets"][body]["Ref. Center"]]["Orb Bodies"].append(body)
 
 with open('db.json', 'w') as outfile:
     json.dump(db, outfile)

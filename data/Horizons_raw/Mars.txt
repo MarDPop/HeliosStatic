@@ -25,7 +25,7 @@ Object Data Page
  Revised: June 21, 2016                 Mars                            499 / 4
  
  PHYSICAL DATA (updated 2019-Oct-29):
-  Vol. mean radius (km) = 3389.92+-0.04   Density (g/cm^3)      =  3.933(5+-4)
+  Vol. mean radius (km) = 3389.92   Density (g/cm^3)      =  3.933(5+-4)
   Mass x10^23 (kg)      =    6.4171       Flattening, f         =  1/169.779
   Volume (x10^10 km^3)  =   16.318        Equatorial radius (km)=  3396.19
   Sidereal rot. period  =   24.622962 hr  Sid. rot. rate, rad/s =  0.0000708822 

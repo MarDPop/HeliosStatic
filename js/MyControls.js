@@ -39,6 +39,8 @@ THREE.MyControls = function ( object , domElement ) {
 	
 	var _delta = new THREE.Vector2();
 	
+	var mouse = new THREE.Vector2();
+	
 	this.mouseScreenStart;
 	
 	this.mouseScreen;
@@ -51,11 +53,13 @@ THREE.MyControls = function ( object , domElement ) {
 	
 	this.zoom;
 	
-	this.zoomFactor = 0.1;
+	this.zoomFactor = 0.05;
 	
 	this.rotationFactor = 2;
 	
 	this.shiftKeyPressed = false;
+	
+	this.targetPlanet;
 	
 	var d;
 
@@ -70,7 +74,6 @@ THREE.MyControls = function ( object , domElement ) {
 		this.screen.offsetTop = 0;
 
 		this.radius = ( this.screen.width + this.screen.height ) / 2;
-		console.log("using radius : " + this.radius);
 		
 		this.aspectVertical = this.rotationFactor*_this.object.fov/(57.3*_this.screen.height);
 		this.aspectHorizontal = this.rotationFactor*_this.object.fov*_this.object.aspect/(57.3*_this.screen.width);
@@ -87,6 +90,26 @@ THREE.MyControls = function ( object , domElement ) {
 	
 	}
 	
+	this.setPlanet = function( planet ) {
+		
+		_this.targetPlanet = planet;
+		
+		_this.target = planet.position;
+		
+		_this.direction.subVectors( _this.object.position, _this.targetPlanet.position );
+		
+		_this.handleResize();
+	
+	}
+	
+	this.unsetPlanet = function() {
+		
+		_this.target = _this.targetPlanet.position.clone();
+		
+		_this.targetPlanet = NULL;
+		
+	}
+	
 	/*
 	this.handleEvent = function ( event ) {
 
@@ -101,9 +124,9 @@ THREE.MyControls = function ( object , domElement ) {
 
 	this.rotate = function () {
 
-		var angleX = this.aspectVertical*_delta.y;
+		var angleX = _this.aspectVertical*_delta.y;
 		
-		var angleY = this.aspectHorizontal*_delta.x;
+		var angleY = _this.aspectHorizontal*_delta.x;
 		
 		let axis = _this.cameraX.clone().multiplyScalar( angleX ).add( _this.cameraY.clone().multiplyScalar( angleY ) ); // might need to use up0
 		
@@ -114,11 +137,6 @@ THREE.MyControls = function ( object , domElement ) {
 		_this.direction = _this.direction0.clone();
 
 		_this.direction.applyAxisAngle( axis, -angle );
-		
-		console.log(angle);
-		
-		//_this.object.up.applyAxisAngle( axis, -angle );
-		
 		
 		// remember camera up is y, stares down negative z, right is x
 	};
@@ -133,15 +151,11 @@ THREE.MyControls = function ( object , domElement ) {
 
 			_this.pan();
 
-		}  else if (_state === STATE.ZOOM ) {
-			
-			//_this.zoom();
-			
-		}
+		} 
 		
-		this.object.position.addVectors( _this.target, _this.direction );
+		_this.object.position.addVectors( _this.target, _this.direction );
 		
-		this.object.lookAt( _this.target );
+		_this.object.lookAt( _this.target );		
 		
 	}
 
@@ -169,8 +183,6 @@ THREE.MyControls = function ( object , domElement ) {
 	};
 
 	this.pan = function () {
-
-		console.log(d);
 
 		var pan = _this.cameraX.clone().setLength( _delta.x/_this.screen.width );
 		
@@ -222,16 +234,19 @@ THREE.MyControls = function ( object , domElement ) {
 		}
 
 		_this.mouseScreen = _this.mouseScreenStart = new THREE.Vector2(event.clientX - _this.screen.offsetLeft, event.clientY - _this.screen.offsetTop);
-
+		_this.direction.subVectors( _this.object.position, _this.target );
+		
 		let el = _this.object.matrixWorldInverse.elements;
 		_this.cameraX = new THREE.Vector3(el[0],el[4],el[8]);
 		_this.cameraY = new THREE.Vector3(el[1],el[5],el[9]);
-		
-		_this.direction.subVectors( _this.object.position, _this.target );
+		//_this.cameraX.crossVectors(_this.cameraY, _this.direction).normalize();
 		
 		if ( _state == STATE.PAN ) {
 			
+			_this.unsetPlanet();
+			
 			_this.target0 = _this.target.clone();
+			
 			d = _this.panFactor*_this.direction.length();
 			
 		} else if (_state == STATE.ROTATE ) {
@@ -374,6 +389,27 @@ THREE.MyControls = function ( object , domElement ) {
 		_state = STATE.NONE;
 
 	}
+	
+	function click(event) {
+		
+		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		
+		// update the picking ray with the camera and mouse position
+		raycaster.setFromCamera( mouse, _this.object );
+
+		// calculate objects intersecting the picking ray
+		var intersects = raycaster.intersectObjects( scene.children );
+
+		for ( var i = 0; i < intersects.length; i++ ) {
+
+			intersects[ i ].object.material.color.set( 0xff0000 );
+
+		}
+	}
+	
+	
 	
 	this.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
 
